@@ -1,4 +1,5 @@
 trigger:
+
 - '*'
 
 pool:
@@ -83,11 +84,22 @@ steps:
     reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
   displayName: 'Create code coverage report'
 
-- task: SonarCloudAnalyze@1
-  displayName: 'Run SonarCloud code analysis'
-
+# - task: SonarCloudAnalyze@1
+#   displayName: 'Run SonarCloud code analysis'
+- task: SonarCloudPrepare@1
+  displayName: 'Run SonarCloud Code Analysis'
+  inputs:
+    SonarCloud: 'SonarCloud connection 1'
+    organization: 'spacegame-web-sreeg'
+    scannerMode: 'MSBuild'
+    projectKey: 'reecharanG_mslearn-tailspin-spacegame-web.'
+    projectName: 'SreecharanG_mslearn-tailspin-spacegame-web'
 - task: SonarCloudPublish@1
   displayName: 'Publish SonarCloud quality gate results'
+  inputs:
+    pollingTimeoutSec: '300'
+# - task: SonarCloudPublish@1
+#   displayName: 'Publish SonarCloud quality gate results'
 
 
 - task: PublishCodeCoverageResults@1
